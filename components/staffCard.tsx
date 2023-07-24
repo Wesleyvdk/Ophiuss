@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { fadeIn } from "../utils/motion";
@@ -17,7 +17,7 @@ interface StaffCardProps {
 }
 
 const StaffCard: React.FC<StaffCardProps> = ({
-  id,
+  id, // eslint-disable-line no-unused-vars
   imgUrl,
   staffName,
   title,
