@@ -5,7 +5,7 @@ import Image from "next/image";
 import { fadeIn } from "../utils/motion";
 
 interface StaffCardProps {
-  id: string;
+  id: string; // eslint-disable-line no-unused-vars
   imgUrl: string;
   staffName: string;
   title: string;
@@ -13,7 +13,7 @@ interface StaffCardProps {
   about: string;
   index: number;
   active: string;
-  handleClick: (id: string) => void;
+  handleClick: (id: string) => void; // eslint-disable-line no-unused-vars
 }
 
 const StaffCard: React.FC<StaffCardProps> = ({
