@@ -16,6 +16,9 @@ module.exports = {
         50: "0.50",
         300: "3.0",
       },
+      transitionTimingFunction: {
+        "out-flex": "cubic-bezier(0.05, 0.6, 0.4, 0.9)",
+      },
     },
   },
   plugins: [],
