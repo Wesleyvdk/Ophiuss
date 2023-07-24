@@ -5,7 +5,7 @@ export const exploreStaff = [
     staffName: "NextFox",
     title: "Founder",
     age: 23,
-    about: "",
+    about: "No about found",
   },
   {
     id: "staff-2",
@@ -13,7 +13,7 @@ export const exploreStaff = [
     staffName: "Deimo63",
     title: "Co-Founder",
     age: 21,
-    about: "",
+    about: "No about found",
   },
   {
     id: "staff-3",
@@ -21,7 +21,7 @@ export const exploreStaff = [
     staffName: "Jesse",
     title: "Co-Founder",
     age: 18,
-    about: "",
+    about: "No about found",
   },
   {
     id: "staff-4",

@@ -1,7 +1,7 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { textContainer, textVariant2 } from "../utils/motion";
 import { ReactElement } from "react";
-
 interface TypingTextProps {
   title: string;
   textStyles?: string;

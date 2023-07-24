@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
+import Image from "next/image";
 import { fadeIn } from "../utils/motion";
 
 interface StaffCardProps {
@@ -34,11 +34,14 @@ const StaffCard: React.FC<StaffCardProps> = ({
     } flex items-center justify-center min-w-[170px] h-[700px] transition-[flex] duration-[0.7s] ease-out-flex cursor-pointer`}
     onClick={() => handleClick(id)}
   >
-    <img
+    <Image
       src={imgUrl}
+      width={4722}
+      height={1689}
       alt="planet-04"
       className="absolute w-full h-full object-cover rounded-[24px]"
     />
+
     {active !== id ? (
       <h3 className="font-semibold sm:text-[26px] text-[18px] text-white absolute z-0 lg:bottom-20 lg:rotate-[-90deg] lg:origin-[0,0]">
         {staffName}
@@ -50,6 +53,9 @@ const StaffCard: React.FC<StaffCardProps> = ({
         </p>
         <p className="font-normal text-[12px] leading-[20.16px] text-white uppercase">
           {`age: ${age}`}
+        </p>
+        <p className="font-normal text-[12px] leading-[20.16px] text-white uppercase">
+          {about}
         </p>
         <h2 className="mt-[24px] font-semibold sm:text-[32px] text-[24px] text-white">
           {staffName}
