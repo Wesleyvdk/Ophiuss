@@ -34,8 +34,8 @@ const Staff: React.FC = () => {
               key={world.id}
               {...world}
               index={index}
-              active={active}
-              handleClick={setActive}
+              // active={active}
+              // handleClick={setActive}
             />
           ))}
         </div>
