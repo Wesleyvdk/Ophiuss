@@ -1,108 +1,73 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Users, Trophy, Newspaper, Calendar } from "lucide-react";
+import { ChevronRight, Users, Trophy, Calendar, Star, Globe, Target } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section - Redesigned */}
-      <section className="relative w-full h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Dark background with subtle pattern */}
-        <div className="absolute inset-0 bg-black">
-          <div className="absolute inset-0 opacity-10 bg-[url('/placeholder.webp?height=1080&width=1920')] bg-cover bg-center"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-gray-900/80"></div>
-
-          {/* Diagonal lines overlay */}
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage:
-                "linear-gradient(135deg, #111 25%, transparent 25%, transparent 50%, #111 50%, #111 75%, transparent 75%, transparent)",
-              backgroundSize: "20px 20px",
-            }}
-          ></div>
-
-          {/* Accent line */}
-          <div className="absolute h-1 w-full top-0 left-0 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600"></div>
-        </div>
-
-        <div className="container relative z-10 px-4 mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Text content */}
-            <div className="text-left">
-              <h2 className="text-blue-500 font-medium mb-2 tracking-wider uppercase">
-                European Rocket League Team
-              </h2>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-4">
-                OPHIUSSA <span className="text-blue-500">ESPORTS</span>
-              </h1>
-
-              <div className="h-1 w-24 bg-blue-500 mb-6"></div>
-
-              <p className="text-xl text-gray-300 mb-8 max-w-lg">
-                A European community team with Portuguese heritage competing in
-                the Rocket Soccar Confederation league.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-white border-none shadow-lg transition-all duration-300"
-                >
-                  <Link href="/team">Our Team</Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-gray-700 text-blue-700 hover:bg-gray-800 transition-all duration-300"
-                >
-                  Watch Us Play
-                </Button>
-              </div>
-            </div>
-
-            {/* Right side - Visual element */}
-            <div className="hidden lg:flex justify-center items-center relative">
-              <div className="relative w-80 h-80">
-                {/* Decorative elements */}
-                <div className="absolute -inset-4 border-2 border-gray-800 rounded-full rotate-45"></div>
-                <div className="absolute -inset-8 border border-gray-800 rounded-full -rotate-12"></div>
-
-                {/* Logo container */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-gray-800">
-                    <Image
-                      src="/placeholder.webp?height=300&width=300"
-                      alt="Ophiussa Esports Logo"
-                      fill
-                      className="object-cover"
-                    />
-
-                    {/* Overlay with team name */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center pb-6">
-                      <span className="text-xl font-bold text-white">
-                        OPHIUSSA
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <div className="flex flex-col min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-950/20 to-black"></div>
+        <div className="container px-4 mx-auto relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-300">
+              OPHIUSSA
+            </h1>
+            <h2 className="text-2xl md:text-3xl text-blue-400 font-semibold mb-8">
+              European Rocket League Esports
+            </h2>
+            <p className="text-xl text-gray-300 mb-8">
+              Portuguese roots, European spirit. Competing in the RSC community
+              league with passion and determination.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3 shadow-lg shadow-blue-900/30">
+                Meet Our Team
+              </Button>
+              <Button
+                variant="outline"
+                className="border-blue-500 text-blue-500 hover:bg-blue-950 text-lg px-8 py-3"
+              >
+                View Matches
+              </Button>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Bottom decorative element */}
-        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-gray-900 to-transparent"></div>
+      {/* Quick Stats */}
+      <section className="py-12 bg-gradient-to-r from-blue-950/30 to-cyan-950/20">
+        <div className="container px-4 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-3xl font-bold text-blue-400">2021</div>
+              <div className="text-gray-300">Founded</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-400">RSC</div>
+              <div className="text-gray-300">League</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-400">EU</div>
+              <div className="text-gray-300">Region</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-400">4</div>
+              <div className="text-gray-300">Founders</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* About Section */}
       <section className="py-16 bg-gray-900">
         <div className="container px-4 mx-auto">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
+            <h2 className="text-blue-500 font-medium mb-2">Our Story</h2>
+            <h3 className="text-3xl font-bold text-white sm:text-4xl">
               About Ophiussa
-            </h2>
+            </h3>
             <div className="mt-4 h-1 w-24 bg-blue-500 mx-auto"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -185,18 +150,17 @@ export default function Home() {
             </div>
             <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-8 rounded-lg border-l-4 border-blue-500 shadow-xl shadow-blue-900/5 hover:shadow-blue-900/10 transition-all duration-300 hover:-translate-y-1">
               <div className="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mb-4">
-                <Newspaper className="h-6 w-6 text-blue-500" />
+                <Globe className="h-6 w-6 text-blue-500" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Latest News</h3>
+              <h3 className="text-xl font-bold text-white mb-2">About Us</h3>
               <p className="text-gray-400">
-                Stay updated with the latest news, match results, and
-                announcements.
+                Learn more about our story, values, and journey as a European esports organization.
               </p>
               <Link
-                href="/news"
+                href="/about"
                 className="inline-flex items-center mt-4 text-blue-500 hover:text-blue-400"
               >
-                Read news <ChevronRight className="ml-1 h-4 w-4" />
+                Read our story <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
           </div>

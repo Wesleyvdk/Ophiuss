@@ -87,14 +87,6 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/news"
-                    className="text-gray-400 hover:text-blue-500"
-                  >
-                    News
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     href="/contact"
                     className="text-gray-400 hover:text-blue-500"
                   >
@@ -139,13 +131,12 @@ export default function Footer() {
                 Contact
               </h3>
               <ul className="mt-4 space-y-2">
-                <li className="text-gray-400">Portugal</li>
                 <li>
                   <a
                     href="https://discord.gg/S8djD63hGx"
                     className="text-gray-400 hover:text-blue-500"
                   >
-                    https://discord.gg/S8djD63hGx
+                    Discord
                   </a>
                 </li>
               </ul>
