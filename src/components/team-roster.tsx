@@ -4,8 +4,8 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Twitter, Twitch, Instagram, Youtube } from "lucide-react"
-import { getTeamMembers } from "@/lib/actions"
-import type { TeamMemberData } from "@/lib/actions"
+import { getAllTeamMembers } from "@/lib/actions"
+import type { TeamMember } from "../../lib/database"
 
 export default function TeamRoster() {
   // Categories of team members
@@ -13,24 +13,24 @@ export default function TeamRoster() {
   const [activeCategory, setActiveCategory] = useState("Management")
 
   // State for team members and featured member
-  const [teamMembers, setTeamMembers] = useState<Record<string, TeamMemberData[]>>({
+  const [teamMembers, setTeamMembers] = useState<Record<string, TeamMember[]>>({
     Management: [],
     Players: [],
     "Content Creators": [],
   })
   const [isLoading, setIsLoading] = useState(true)
-  const [featuredMember, setFeaturedMember] = useState<TeamMemberData | null>(null)
+  const [featuredMember, setFeaturedMember] = useState<TeamMember | null>(null)
 
   // Fetch team members on component mount
   useEffect(() => {
     const fetchTeamMembers = async () => {
       try {
         setIsLoading(true)
-        const members = await getTeamMembers()
+        const members = await getAllTeamMembers()
 
         // Group members by category
         const groupedMembers = members.reduce(
-          (acc: any, member: TeamMemberData) => {
+          (acc: any, member: TeamMember) => {
             const category = member.category
             if (!acc[category]) {
               acc[category] = []
@@ -38,7 +38,7 @@ export default function TeamRoster() {
             acc[category].push(member)
             return acc
           },
-          {} as Record<string, TeamMemberData[]>,
+          {} as Record<string, TeamMember[]>,
         )
 
         setTeamMembers(groupedMembers)
@@ -58,12 +58,18 @@ export default function TeamRoster() {
   }, [activeCategory])
 
   // Get country flag emoji
-  const getCountryFlag = (countryCode: string) => {
-    const codePoints = countryCode
-      .toUpperCase()
-      .split("")
-      .map((char) => 127397 + char.charCodeAt(0))
-    return String.fromCodePoint(...codePoints)
+  const getCountryFlag = (countryName: string) => {
+    // Simple mapping for demo - in production you'd want a more complete mapping
+    const flagMap: Record<string, string> = {
+      'Portugal': '🇵🇹',
+      'Spain': '🇪🇸',
+      'France': '🇫🇷',
+      'Italy': '🇮🇹',
+      'Germany': '🇩🇪',
+      'Netherlands': '🇳🇱',
+      'United Kingdom': '🇬🇧'
+    }
+    return flagMap[countryName] || '🏳️'
   }
 
   // Handle category change
@@ -126,9 +132,8 @@ export default function TeamRoster() {
           {teamMembers[activeCategory].map((member) => (
             <div
               key={member.id}
-              className={`relative bg-gradient-to-b ${
-                member.id === featuredMember?.id ? "from-blue-900/30 to-black" : "from-gray-900 to-black"
-              } rounded-lg overflow-hidden border border-gray-800/30 shadow-lg hover:shadow-blue-900/20 transition-all duration-300 hover:-translate-y-1 cursor-pointer`}
+              className={`relative bg-gradient-to-b ${member.id === featuredMember?.id ? "from-blue-900/30 to-black" : "from-gray-900 to-black"
+                } rounded-lg overflow-hidden border border-gray-800/30 shadow-lg hover:shadow-blue-900/20 transition-all duration-300 hover:-translate-y-1 cursor-pointer`}
               onClick={() => setFeaturedMember(member)}
             >
               <div className="p-6 flex flex-col items-center">
@@ -216,90 +221,82 @@ export default function TeamRoster() {
           ))}
         </div>
       ) : (
-        // No members found
-        <div className="text-center py-12">
-          <p className="text-gray-400 text-lg">No team members found in this category.</p>
+        // Empty state
+        <div className="text-center py-16">
+          <div className="text-gray-400 text-lg mb-4">No {activeCategory.toLowerCase()} members found</div>
+          <p className="text-gray-500">Check back later as we continue to grow our team!</p>
         </div>
       )}
 
-      {/* Featured Member */}
+      {/* Featured Member Detail */}
       {featuredMember && (
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden border border-gray-800/30 shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              {/* Image Side */}
-              <div className="relative h-[500px]">
-                <Image
-                  src={featuredMember.image || "/placeholder.webp"}
-                  alt={featuredMember.name}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xl">{getCountryFlag(featuredMember.country)}</span>
-                  </div>
-                </div>
+        <div className="border-t border-gray-800 pt-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left">
+              <h3 className="text-4xl font-bold mb-2">{featuredMember.name}</h3>
+              <div className="text-blue-500 text-xl font-medium mb-4">{featuredMember.nickname}</div>
+              <div className="text-gray-400 uppercase tracking-wider mb-6">{featuredMember.role}</div>
+              <p className="text-gray-300 text-lg leading-relaxed mb-8">{featuredMember.bio}</p>
+
+              {/* Social Links */}
+              <div className="flex justify-center lg:justify-start gap-6">
+                {featuredMember.twitter && (
+                  <a
+                    href={featuredMember.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors"
+                  >
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                )}
+                {featuredMember.twitch && (
+                  <a
+                    href={featuredMember.twitch}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-purple-600 hover:bg-purple-700 p-3 rounded-full transition-colors"
+                  >
+                    <Twitch className="h-5 w-5" />
+                  </a>
+                )}
+                {featuredMember.instagram && (
+                  <a
+                    href={featuredMember.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-pink-600 hover:bg-pink-700 p-3 rounded-full transition-colors"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                )}
+                {featuredMember.youtube && (
+                  <a
+                    href={featuredMember.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-colors"
+                  >
+                    <Youtube className="h-5 w-5" />
+                  </a>
+                )}
               </div>
+            </div>
 
-              {/* Content Side */}
-              <div className="p-8 flex flex-col justify-between">
-                <div>
-                  <div className="mb-6">
-                    <h3 className="text-xl text-blue-400 font-medium">{featuredMember.name}</h3>
-                    <h2 className="text-5xl font-bold mb-2">{featuredMember.nickname}</h2>
-                    <p className="text-gray-400">{featuredMember.role}</p>
-                  </div>
-                  <p className="text-gray-300 mb-8">{featuredMember.bio}</p>
+            <div className="flex justify-center">
+              <div className="relative w-80 h-80">
+                <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-blue-500">
+                  <Image
+                    src={featuredMember.image || "/placeholder.webp"}
+                    alt={featuredMember.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-
-                {/* Social Links */}
-                <div className="flex gap-4">
-                  {featuredMember.twitter && (
-                    <a
-                      href={featuredMember.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-blue-500 transition-colors"
-                    >
-                      <Twitter className="h-6 w-6" />
-                      <span className="sr-only">Twitter</span>
-                    </a>
-                  )}
-                  {featuredMember.twitch && (
-                    <a
-                      href={featuredMember.twitch}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-purple-500 transition-colors"
-                    >
-                      <Twitch className="h-6 w-6" />
-                      <span className="sr-only">Twitch</span>
-                    </a>
-                  )}
-                  {featuredMember.instagram && (
-                    <a
-                      href={featuredMember.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-pink-500 transition-colors"
-                    >
-                      <Instagram className="h-6 w-6" />
-                      <span className="sr-only">Instagram</span>
-                    </a>
-                  )}
-                  {featuredMember.youtube && (
-                    <a
-                      href={featuredMember.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <Youtube className="h-6 w-6" />
-                      <span className="sr-only">YouTube</span>
-                    </a>
-                  )}
+                {/* Country Badge */}
+                <div className="absolute -top-4 -right-4 bg-blue-500 text-white px-4 py-2 rounded-full text-lg font-medium flex items-center gap-2">
+                  <span>{getCountryFlag(featuredMember.country)}</span>
+                  <span>{featuredMember.country}</span>
                 </div>
               </div>
             </div>

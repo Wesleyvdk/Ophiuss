@@ -1,117 +1,157 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { prisma } from "@/lib/db"
-import { unstable_cache } from "next/cache"
+import { neon } from '@neondatabase/serverless'
+import type { TeamMember } from '../../lib/database'
 
-// Cache duration in seconds (5 minutes)
-const CACHE_DURATION = 60 * 5
+const sql = neon(process.env.DATABASE_URL!)
 
-// Get all team members with caching
-export const getTeamMembers = unstable_cache(
-    async () => {
-        try {
-            const members = await prisma.teamMember.findMany({
-                orderBy: {
-                    displayOrder: "asc",
-                },
-            })
-
-            return members
-        } catch (error) {
-            console.error("Error fetching team members:", error)
-            return []
-        }
-    },
-    ["team-members"],
-    { revalidate: CACHE_DURATION },
-)
-
-// Get team members by category with caching
-export const getTeamMembersByCategory = unstable_cache(
-    async (category: string) => {
-        try {
-            const members = await prisma.teamMember.findMany({
-                where: {
-                    category,
-                },
-                orderBy: {
-                    displayOrder: "asc",
-                },
-            })
-
-            return members
-        } catch (error) {
-            console.error(`Error fetching ${category} members:`, error)
-            return []
-        }
-    },
-    ["team-members-by-category"],
-    { revalidate: CACHE_DURATION },
-)
-
-// Add a new team member
-export async function addTeamMember(data: Omit<TeamMemberData, "id">) {
-    try {
-        await prisma.teamMember.create({
-            data,
-        })
-
-        // Revalidate the team page to show the new member
-        revalidatePath("/team")
-        return { success: true }
-    } catch (error) {
-        console.error("Error adding team member:", error)
-        return { success: false, error }
-    }
+export async function getTeamMembersByCategory(category: string): Promise<TeamMember[]> {
+  try {
+    const members = await sql`
+      SELECT 
+        id,
+        created_at,
+        updated_at,
+        name,
+        nickname,
+        role,
+        country,
+        bio,
+        image,
+        category,
+        twitter,
+        twitch,
+        instagram,
+        youtube,
+        display_order
+      FROM team_members 
+      WHERE category = ${category}
+      ORDER BY display_order ASC, created_at ASC
+    `
+    
+    return members as TeamMember[]
+  } catch (error) {
+    console.error("Error fetching team members:", error)
+    throw new Error("Failed to fetch team members")
+  }
 }
 
-// Update an existing team member
-export async function updateTeamMember(id: number, data: Partial<TeamMemberData>) {
-    try {
-        await prisma.teamMember.update({
-            where: { id },
-            data,
-        })
-
-        // Revalidate the team page to show the updated member
-        revalidatePath("/team")
-        return { success: true }
-    } catch (error) {
-        console.error("Error updating team member:", error)
-        return { success: false, error }
-    }
+export async function getAllTeamMembers(): Promise<TeamMember[]> {
+  try {
+    const members = await sql`
+      SELECT 
+        id,
+        created_at,
+        updated_at,
+        name,
+        nickname,
+        role,
+        country,
+        bio,
+        image,
+        category,
+        twitter,
+        twitch,
+        instagram,
+        youtube,
+        display_order
+      FROM team_members 
+      ORDER BY category, display_order ASC, created_at ASC
+    `
+    
+    return members as TeamMember[]
+  } catch (error) {
+    console.error("Error fetching all team members:", error)
+    throw new Error("Failed to fetch team members")
+  }
 }
 
-// Delete a team member
-export async function deleteTeamMember(id: number) {
-    try {
-        await prisma.teamMember.delete({
-            where: { id },
-        })
-
-        // Revalidate the team page to show the changes
-        revalidatePath("/team")
-        return { success: true }
-    } catch (error) {
-        console.error("Error deleting team member:", error)
-        return { success: false, error }
-    }
+export async function createTeamMember(data: {
+  name: string
+  nickname: string
+  role: string
+  country: string
+  bio: string
+  image: string
+  category: string
+  twitter?: string
+  twitch?: string
+  instagram?: string
+  youtube?: string
+  displayOrder?: number
+}) {
+  try {
+    await sql`
+      INSERT INTO team_members (
+        name, nickname, role, country, bio, image, category, 
+        twitter, twitch, instagram, youtube, display_order
+      ) VALUES (
+        ${data.name}, ${data.nickname}, ${data.role}, ${data.country}, 
+        ${data.bio}, ${data.image}, ${data.category}, 
+        ${data.twitter || null}, ${data.twitch || null}, 
+        ${data.instagram || null}, ${data.youtube || null}, 
+        ${data.displayOrder || 0}
+      )
+    `
+    
+    revalidatePath("/")
+  } catch (error) {
+    console.error("Error creating team member:", error)
+    throw new Error("Failed to create team member")
+  }
 }
 
-// Type for team member data
-export type TeamMemberData = {
-    id: number
-    name: string
-    nickname: string
-    role: string
-    country: string
-    bio: string
-    image: string
-    category: string
+export async function updateTeamMember(
+  id: number,
+  data: {
+    name?: string
+    nickname?: string
+    role?: string
+    country?: string
+    bio?: string
+    image?: string
+    category?: string
     twitter?: string | null
     twitch?: string | null
     instagram?: string | null
     youtube?: string | null
-    displayOrder: number
+    displayOrder?: number
+  }
+) {
+  try {
+    await sql`
+      UPDATE team_members 
+      SET 
+        name = COALESCE(${data.name}, name),
+        nickname = COALESCE(${data.nickname}, nickname),
+        role = COALESCE(${data.role}, role),
+        country = COALESCE(${data.country}, country),
+        bio = COALESCE(${data.bio}, bio),
+        image = COALESCE(${data.image}, image),
+        category = COALESCE(${data.category}, category),
+        twitter = ${data.twitter !== undefined ? data.twitter : null},
+        twitch = ${data.twitch !== undefined ? data.twitch : null},
+        instagram = ${data.instagram !== undefined ? data.instagram : null},
+        youtube = ${data.youtube !== undefined ? data.youtube : null},
+        display_order = COALESCE(${data.displayOrder}, display_order),
+        updated_at = NOW()
+      WHERE id = ${id}
+    `
+    
+    revalidatePath("/")
+  } catch (error) {
+    console.error("Error updating team member:", error)
+    throw new Error("Failed to update team member")
+  }
+}
+
+export async function deleteTeamMember(id: number) {
+  try {
+    await sql`DELETE FROM team_members WHERE id = ${id}`
+    revalidatePath("/")
+  } catch (error) {
+    console.error("Error deleting team member:", error)
+    throw new Error("Failed to delete team member")
+  }
 }
