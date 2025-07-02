@@ -2,6 +2,136 @@
 
 All notable changes to the Ophiussa Esports marketing website are documented in this file.
 
+## [2.1.0] - 2025-07-02
+
+### 🎨 Major Team Page Redesign
+
+- **Complete team page restructure** inspired by professional esports organizations
+- **Removed expand roster buttons** for cleaner, focused presentation
+- **Enhanced member categorization** with distinct layouts for different roles
+- **Improved visual hierarchy** with better spacing and typography
+
+#### Team Data Structure Overhaul
+- **Management members**: Name, nickname, role, description, country flags, social links
+- **Player members**: Name, roster team (Cobra/Viper/Mamba), role (Main/Sub/Coach), country flags, social links
+- **Content creators**: Name, nickname, role, country flags, social links
+- **TypeScript improvements** with proper type definitions for each member category
+
+#### Enhanced Player Display
+- **Roster team integration**: Players organized by team names (Cobra, Viper, Mamba)
+- **Role-based color coding**: Main (green), Sub (yellow), Coach (purple)
+- **Streamlined information**: Focus on essential details without clutter
+- **Professional presentation**: Clean cards with hover effects and animations
+
+### ✨ UI/UX Improvements
+
+#### Team Page Features
+- **Professional hero section** with prominent application call-to-action
+- **Category icons**: Crown (Management), Gamepad (Players), Video (Content Creators)
+- **Country flag integration**: European diversity showcase with emoji flags
+- **Social media integration**: Platform-specific icons for all social links
+- **Responsive grid layouts**: 1-4 columns adapting to screen size
+
+#### Button Styling Fixes
+- **About page CTA buttons**: Fixed text visibility and hover states
+- **Consistent styling**: Applied proper color schemes across all pages
+- **Enhanced accessibility**: Better contrast and interaction feedback
+
+### 🔧 Technical Improvements
+
+#### Code Quality
+- **TypeScript enhancements**: Proper type definitions for team member categories
+- **Component optimization**: Cleaned up unused imports and variables
+- **Error handling**: Improved type safety with proper type guards
+- **Code organization**: Better structure and readability
+
+#### Performance Optimizations
+- **Removed unused components**: Cleaned up TeamRoster and TeamPageSkeleton references
+- **Optimized imports**: Only import necessary Lucide React icons
+- **Reduced bundle size**: Eliminated redundant code and dependencies
+
+### 🗂️ Content Management
+
+#### Team Structure
+- **Management team**: 4 co-founders with detailed descriptions
+- **Player rosters**: 8 players across 3 teams (Cobra, Viper, Mamba)
+- **Content creators**: 2 creators with specialized roles
+- **Flexible data structure**: Easy to add/modify team members
+
+#### Data Organization
+```typescript
+// Example team structure
+Management: [
+  { name: "NextFox", nickname: "NF", role: "Founder / CEO", description: "...", country: "PT" }
+]
+Players: [
+  { name: "Player One", rosterName: "Cobra", role: "Main", country: "PT" }
+]
+```
+
+### 🎯 Design System Updates
+
+#### Visual Consistency
+- **Card-based layouts**: Consistent design across all team member cards
+- **Color scheme**: Blue-focused palette with role-specific accent colors
+- **Typography**: Professional hierarchy with clear information structure
+- **Spacing**: Improved padding and margins for better readability
+
+#### Interactive Elements
+- **Hover effects**: Subtle animations on team member cards
+- **Social link styling**: Consistent icon buttons with hover states
+- **Button improvements**: Better contrast and accessibility
+- **Responsive design**: Optimal viewing on all device sizes
+
+### 🌍 European Identity
+
+#### International Representation
+- **Country flags**: Visual representation of team diversity
+- **Multiple nationalities**: Players from Portugal, Germany, France, Spain, UK, Sweden, Italy, Netherlands
+- **Cultural integration**: Celebrating European roots while embracing continental talent
+
+### 📱 Mobile Responsiveness
+
+- **Responsive grid**: Adapts from 1 column (mobile) to 4 columns (desktop)
+- **Touch-friendly**: Optimized button sizes and interaction areas
+- **Mobile navigation**: Improved user experience on smaller screens
+- **Performance**: Fast loading on mobile devices
+
+### 🔗 Integration Improvements
+
+#### Discord Integration
+- **Consistent application flow**: All application buttons link to Discord
+- **Environment variable usage**: Proper DISCORD_INVITE_LINK implementation
+- **External link handling**: Proper target="_blank" and security attributes
+
+#### Social Media
+- **Platform detection**: Automatic icon selection for social platforms
+- **External link security**: Proper noopener and noreferrer attributes
+- **Accessibility**: Screen reader friendly social links
+
+### 🐛 Bug Fixes
+
+- **TypeScript errors**: Resolved all type-related compilation errors
+- **Button styling**: Fixed text visibility issues on about page
+- **Import optimization**: Removed unused imports and cleaned up code
+- **Type safety**: Added proper type guards for member properties
+
+### ⚠️ Breaking Changes
+
+1. **Team data structure**: Updated team member objects with new properties
+2. **Component interfaces**: Changed team member type definitions
+3. **Layout changes**: Removed expand roster functionality
+
+### 📋 Migration Notes
+
+#### For Team Data Updates
+- Management members require `description` field
+- Players require `rosterName` field instead of generic bio
+- Content creators maintain simple structure with optional nickname
+- All members require `country` field for flag display
+
+---
+
 ## [2.0.0] - 2025-07-02
 
 ### 🚀 Major Updates
